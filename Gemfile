@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 ruby '2.2.0'
 
+gem 'twitter'
+
 gem 'httparty'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
