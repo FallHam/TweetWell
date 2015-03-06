@@ -1,7 +1,11 @@
 class TweetsController < ApplicationController
 
   def index
-    @tweets = Tweet.new.tweets(params[:q])
+
+  end
+
+  def show
+    @tweets = Tweet.new.tweets(params[:search])
     render json: @tweets
   end
 end
