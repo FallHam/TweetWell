@@ -5,7 +5,7 @@ class TweetsController < ApplicationController
   end
 
   def show
-    @tweets = Tweet.new.tweets(params[:search])
+    @tweets = Tweet.new.conditions(params[:state_code], params[:city])
     render json: @tweets
   end
 end

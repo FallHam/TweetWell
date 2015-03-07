@@ -11,6 +11,7 @@ class Tweet
 
   def conditions(state_code, city)
     @weather = HTTParty.get("http://api.wunderground.com/api/#{ENV['WUNG_KEY']}/conditions/q/#{state_code}/#{city}.json")
+    tweets
   end
 
   def weather
@@ -28,27 +29,17 @@ class Tweet
   def geocode
     lat = @weather["current_observation"]["display_location"]["latitude"]
     lon = @weather["current_observation"]["display_location"]["longitude"]
-    @geocode = [lat,lon].to_s
+    [lat,lon]
   end
 
   def tweets
-    @client.search("", geocode: "#{@geocode},100mi", lang: "en").take(100).collect
+    g = geocode
+    @client.search(" ", geocode: "#{g[0]},#{g[1]},100mi", lang: "en").take(10)
+    .map{|t| [t.user.screen_name, t.text, analyze(t.text)]}
   end
 
   def analyze(text)
     HTTParty.post("http://sentiment.vivekn.com/api/text/", body: { txt: text } )
   end
 
-
-
-
 end
-# .map{|t| t}
-
-  # [t.user.screen_name, t.text, analyze(t.text)]}
-
-
-  "weather": "Partly Cloudy",
-  "temperature_string": "66.3 F (19.1 C)",
-
-  "relative_humidity": "65%",
