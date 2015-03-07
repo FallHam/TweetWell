@@ -34,12 +34,14 @@ class Tweet
 
   def tweets
     g = geocode
-    @client.search(" ", geocode: "#{g[0]},#{g[1]},100mi", lang: "en").take(10).map do |t|
+    @client.search("-rt", geocode: "#{g[0]},#{g[1]},100mi", lang: "en").take(200).map do |t|
       a = analyze(t.text)
-       {
-         sentiment: a["result"]["sentiment"],
-         confidence: a["result"]["confidence"].to_f,
-       }
+
+      {
+        weather: weather,
+        sentiment: a["result"]["sentiment"],
+        confidence: a["result"]["confidence"].to_f,
+      }
      end
   end
 
@@ -64,14 +66,18 @@ class Tweet
       end
     end
     @results = {}
+    @results[:weather] = batch[0][:weather]
     @results[:positive] = average(positive_array)
+    @results[:total_pos] = positive_array.length
     @results[:negative] = average(negative_array)
+    @results[:total_neg] = negative_array.length
     @results[:neutral] = average(neutral_array)
+
     return @results
   end
 
   def average(arr)
-    a = arr.reject{ |r|  r[:confidence] < 70 }
+    a = arr.reject{ |r| r[:confidence] < 65 }
     a.reduce(0.0) {|sum, r| sum + r[:confidence]} / a.length
   end
 

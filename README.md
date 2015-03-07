@@ -1,22 +1,16 @@
 #Summary:
-TweetWell is an app that uses two different APIs, to gauge the sentiment of users regarding a specific search term that you can provide. This information returns a list of 10 recent tweets in JSON format based off the interaction of the two APIs.
+TweetWell is an app that uses two different APIs, to gauge the sentiment of users while considering the current weather conditions of their location. This information returns a list of 200 random recent tweets in JSON format based off the interaction of the two APIs.
 
 #How to Use TweetWell:
-- Access Twitter's API by using your Twitter login to tap into their application management system.
 
-- When registered, you will be provided with:
-  -  a consumer key
-  -  a consumer secret key
-  -  an access token
-  -  an access token secret
+- Visit https://tweetwell.herokuapp.com/conditions/{StateCode}/{City}
 
+- You must replace {StateCode} with your specific 2 letter state code and {City} with your city name.
 
-- Run "atom .profile" from your terminal and include the keys and tokens provided by Twitter in the file.
+- If there are spaces in the city name, use an underscore ("_") between the words.
 
-- Once this information has been saved, you will be able to run TweetWell.
+- When you run the code, you will get information about the weather conditions, the number of tweets interpreted as either positive and negative from a sample of 200 tweets along with an average confidence score for both positive and negative tweets.
 
-- Start your local server with the command "rails s" in your terminal.
+- TweetWell is set to consider tweets made from 100 miles of the location you specify.
 
-- From localhoust:3000, update the end of the url address to reflect your search term.
-
-- You can search by a specific hashtag by using "#yourserachterm" or a unique user by "@username".
+- Because some tweets are difficult to gauge as being either positive or negative, we have omitted tweets with confidents levels of lower than 65.
