@@ -5,7 +5,8 @@ class TweetsController < ApplicationController
   end
 
   def show
-    @tweets = Tweet.new.conditions(params[:state_code], params[:city])
-    render json: @tweets
+    batch = Tweet.new.conditions(params[:state_code], params[:city])
+    response = Tweet.new.sort(batch)
+    render json: response
   end
 end

@@ -34,12 +34,75 @@ class Tweet
 
   def tweets
     g = geocode
-    @client.search(" ", geocode: "#{g[0]},#{g[1]},100mi", lang: "en").take(10)
-    .map{|t| [t.user.screen_name, t.text, analyze(t.text)]}
+    @client.search(" ", geocode: "#{g[0]},#{g[1]},100mi", lang: "en").take(10).map do |t|
+      a = analyze(t.text)
+       {
+         name: t.user.screen_name,
+         text: t.text,
+         sentiment: a["result"]["sentiment"],
+         confidence: a["result"]["confidence"]
+       }
+
+     end
   end
 
   def analyze(text)
     HTTParty.post("http://sentiment.vivekn.com/api/text/", body: { txt: text } )
   end
+
+  def sort(batch)
+
+    postitive_array = []
+    negative_array = []
+    neutral_array = []
+
+    batch.each do |tweet|
+      if tweet[:sentiment] == "Positive"
+        postitive_array << tweet
+      elsif tweet[:sentiment] == "Negative"
+        negative_array << tweet
+      elsif tweet[:sentiment] == "Neutral"
+        neutral_array << tweet
+      else
+        raise "error reading sentiments"
+      end
+    end
+    results = {}
+    results[:positive] = postitive_array
+    results[:negative] = negative_array
+    results[:neutral] = neutral_array
+    return results
+  end
+
+
+
+
+
+  #
+  # def positive
+  #   positive_array = []
+  #   positive_array << @sample.select {"sentiment" == "positive"}
+  # end
+  #
+  # def negative
+  #   negative_array = @sample.select {"sentiment" == "negative"}
+  # end
+  #
+  # def nuetral
+  #   @sample.select {"sentiment" == "nuetral"}
+  # end
+  #
+  # def average(array)
+  #   count = Array.length
+  #   @array.each do |a|
+  #     (confidence.sum) / count
+  #   end
+  #   return count
+  #
+  # end
+  #
+  # average(positive)
+  #
+
 
 end
